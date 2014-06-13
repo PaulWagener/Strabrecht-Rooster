@@ -4,11 +4,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'strabrecht.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
     url(r'^$', 'rooster.views.index'),
-    url(r'^sources\.json$', 'rooster.views.sources'),
+    url(r'^(teacher|room|group|student)/([a-zA-Z0-9_]+)\.(ics|json)$', 'rooster.views.events'),
     url(r'^admin/', include(admin.site.urls)),
+
 )

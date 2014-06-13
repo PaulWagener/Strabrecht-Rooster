@@ -15,31 +15,55 @@
     <script>
     angular.module('RoosterApp', ['ui.bootstrap'])
     .controller('RoosterController', function($scope, $http) {
-        $scope.activeSources = [];
+        $scope.activeSources = JSON.parse(localStorage['activeSources'] || []);
         $scope.sources = UNTIS_JSON;
 
+        $scope.$watchCollection('activeSources', function(newSources, oldSources) {
+            if(newSources == oldSources)
+                oldSources = [];
 
-        $scope.select = function(model) {
+            // Remove old sources
+            $(oldSources).not(newSources).each(function(i, e) {
+                $('#calendar').fullCalendar('removeEventSource', e.json_url)
+            });
+
+            // Add new sources
+            $(newSources).not(oldSources).each(function(i, e) {
+                $('#calendar').fullCalendar('addEventSource', e.json_url)
+            });
+
+            // Save in local storage
+            localStorage['activeSources'] = JSON.stringify(newSources);
+        });
+
+        $scope.select = function(source) {
             $scope.selected = '';
-            console.log(model);
-            if($scope.activeSources.indexOf(model) == -1) {
-                $scope.activeSources.push(model);
+            if($scope.activeSources.indexOf(source) == -1) {
+                $scope.activeSources.push(source);
             }
-
         };
+        $scope.remove = function(index) {
+            $scope.activeSources.splice(index, 1);
+        }
 
         // Set us up the calendar
         $('#calendar').fullCalendar({
             weekends: false,
-            eventSources: [],
-            aspectRatio: 2,
+            allDaySlot: false,
+            minTime: '8:00:00',
+            maxTime: '18:00:00',
+            timezone: 'local',
+            contentHeight: 8000,
             defaultView: 'agendaWeek',
             header:{
               left: 'title',
               center: '',
               right: 'today prev,next'
+            },
+            eventRender: function(event, element) {
+                console.log(element);
             }
-        });
+        }).fullCalendar( 'gotoDate', 'UNTIS_STARTDATE');
 
         // Custom ctrl+f
         $(window).keydown(function(e){
@@ -52,6 +76,7 @@
 
     </script>
     <style>
+    .fc-agenda-slots td div { height: 30px; }
     body {
         margin: 50px;
     }
@@ -76,9 +101,10 @@
   </head>
   <body ng-controller="RoosterController">
     <header>
-       <input ng-model="selected" id="select" placeholder="Zoek op klassen, lokalen, docenten en leerlingen" typeahead="source as source.title for source in sources | filter:$viewValue | limitTo:8" typeahead-on-select="select($model)" class="form-control" autofocus>
 
-       <div ng-repeat="source in activeSources" class="source">{{source.title}}</div>
+      <div ng-repeat="source in activeSources" class="source">{{source.title}} <button ng-click="remove($index)">X</button></div>
+      <input ng-model="selected" id="select" placeholder="Zoek op klassen, lokalen, docenten en leerlingen" typeahead="source as source.title for source in sources | filter:$viewValue | limitTo:8" typeahead-on-select="select($model)" class="form-control" autofocus>
+
     </header>
 
 
