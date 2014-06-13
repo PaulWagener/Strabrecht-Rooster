@@ -1,0 +1,10 @@
+{
+  "name": "strabrecht",
+  "version": "1.0.0",
+  "dependencies": {
+    "angular-ui-calendar": "~0.x"
+  },
+  "resolutions" : {
+    "jquery" : "~2.x"
+  }
+}
