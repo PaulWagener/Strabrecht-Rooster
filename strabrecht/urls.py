@@ -9,6 +9,6 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^$', 'rooster.views.index'),
-
+    url(r'^sources\.json$', 'rooster.views.sources'),
     url(r'^admin/', include(admin.site.urls)),
 )

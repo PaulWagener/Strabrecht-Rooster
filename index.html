@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html ng-app="RoosterApp">
+  <head>
+    <title>Strabrecht Rooster</title>
+    <link rel="stylesheet" href="/static/bower_components/bootstrap-css/css/bootstrap.css" />
+    <link rel="stylesheet" href="/static/bower_components/fullcalendar/dist/fullcalendar.css">
+
+    <script src="/static/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/static/bower_components/angular/angular.min.js"></script>
+    <script src="/static/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+    <script src="/static/bower_components/moment/min/moment.min.js"></script>
+    <script src="/static/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+    <script src="/static/nl.js"></script>
+    <script>
+    angular.module('RoosterApp', ['ui.bootstrap'])
+    .controller('RoosterController', function($scope, $http) {
+        $scope.activeSources = [];
+        $scope.sources = UNTIS_JSON;
+
+
+        $scope.select = function(model) {
+            $scope.selected = '';
+            console.log(model);
+            if($scope.activeSources.indexOf(model) == -1) {
+                $scope.activeSources.push(model);
+            }
+
+        };
+
+        // Set us up the calendar
+        $('#calendar').fullCalendar({
+            weekends: false,
+            eventSources: [],
+            aspectRatio: 2,
+            defaultView: 'agendaWeek',
+            header:{
+              left: 'title',
+              center: '',
+              right: 'today prev,next'
+            }
+        });
+
+        // Custom ctrl+f
+        $(window).keydown(function(e){
+            if ((e.ctrlKey || e.metaKey) && e.keyCode === 70) {
+                $('#select').focus();
+                e.preventDefault();
+            }
+        });
+    });
+
+    </script>
+    <style>
+    body {
+        margin: 50px;
+    }
+    #calendar {
+        margin: 0 auto;
+        clear: both;
+    }
+
+    .source {
+        float: right;
+        background-color: #FF9999;
+        border: 1px solid black;
+        padding: 15px;
+        margin: 10px;
+        border-radius: 5px;
+    }
+
+    #select {
+        width: 50%;
+    }
+    </style>
+  </head>
+  <body ng-controller="RoosterController">
+    <header>
+       <input ng-model="selected" id="select" placeholder="Zoek op klassen, lokalen, docenten en leerlingen" typeahead="source as source.title for source in sources | filter:$viewValue | limitTo:8" typeahead-on-select="select($model)" class="form-control" autofocus>
+
+       <div ng-repeat="source in activeSources" class="source">{{source.title}}</div>
+    </header>
+
+
+     <div id="calendar"></div>
+  </body>
+</html>
