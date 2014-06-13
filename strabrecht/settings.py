@@ -86,4 +86,8 @@ TEMPLATE_DIRS = (
     PROJECT_PATH + '/templates'
 )
 
+STATICFILES_DIRS = (
+    PROJECT_PATH + '/static',
+)
+
 STATIC_URL = '/static/'

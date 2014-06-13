@@ -2,7 +2,9 @@
   "name": "strabrecht",
   "version": "1.0.0",
   "dependencies": {
-    "angular-ui-calendar": "~0.x"
+    "angular-ui-calendar": "~0.x",
+    "bootstrap-css": "~3.x",
+    "angular-bootstrap": "~0.x"
   },
   "resolutions" : {
     "jquery" : "~2.x"
