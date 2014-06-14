@@ -1,6 +1,6 @@
 from django.db import models
 import django.utils.timezone
-import untis, urllib2, datetime
+import untis, urllib2, datetime, re
 
 # Create your models here.
 class Source(models.Model):
@@ -12,7 +12,7 @@ class Source(models.Model):
         ('student', 'Student')))
 
     def get_code(self):
-        return self.title.replace(' ', '_').replace('.', '')
+        return re.sub('[^a-zA-Z0-9]+', '_', self.title).strip('_')
 
     def as_json(self):
         return {
