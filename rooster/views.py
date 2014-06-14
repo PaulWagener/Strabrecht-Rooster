@@ -9,6 +9,7 @@ def index(request):
     return HttpResponse(open(strabrecht.settings.PROJECT_PATH + '/index.html').read()
         #.replace('UNTIS_JSON', untis.get_sources_json())
         #.replace('UNTIS_STARTDATE', str(untis.get_start_date_for_untis_week('Dagelijks'))))
+        .replace('DOMAIN', request.META['HTTP_HOST'])
         )
 
 @csrf_exempt

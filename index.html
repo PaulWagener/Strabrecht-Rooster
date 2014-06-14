@@ -82,7 +82,7 @@
         // Set us up the calendar
         $('#calendar').fullCalendar({
             theme: true,
-            //weekends: false,
+            weekends: false,
             allDaySlot: false,
             minTime: '8:00:00',
             maxTime: '18:00:00',
@@ -204,6 +204,10 @@
         font-weight: 300;
     }
 
+    .fc-today {
+        background-color: #ffefef;
+    }
+
     .fc-event {
         border-left-width: 3px !important;
         border-corner-shape: notch;
@@ -249,8 +253,15 @@
         clear: both;
     }
 
+    .source-container {
+        float: left;
+    }
+    .source-container:hover ul {
+        display: block;
+        top: auto;
+        left: auto;
+    }
     .source {
-        float: right;
         border-width: 0;
         border-left-width: 3px;
         border-style: solid;
@@ -259,8 +270,15 @@
     }
 
     #select {
+        float: left;
         width: 50%;
-        margin-bottom: 20px;
+        margin-right: 30px;
+        margin-bottom: 30px;
+    }
+
+    #select, .source {
+        margin-top: 5px;
+        height: 3em;
     }
 
 
@@ -269,8 +287,19 @@
   <body ng-controller="RoosterController">
     <header>
 
-      <div ng-repeat="source in activeSources" class="source" ng-attr-style="border-color: {{source.color.border}}; background-color: {{source.color.background}}; color: {{source.color.text}};">{{source.title}} <button ng-click="remove($index)" class="btn btn-default btn-xs">X</button></div>
       <input ng-model="selected" id="select" placeholder="Zoek op klassen, lokalen, docenten en leerlingen" typeahead="source as source.title for source in sources | filter:$viewValue | limitTo:8" typeahead-on-select="select($model)" class="form-control" autofocus>
+
+      <div class="source-container" ng-repeat="source in activeSources">
+        <div class="source" ng-attr-style="border-color: {{source.color.border}}; background-color: {{source.color.background}}; color: {{source.color.text}};">
+          {{source.title}} <button ng-click="remove($index)" class="btn btn-default btn-xs">X</button>
+        </div>
+        <ul class="dropdown-menu" role="menu" style="margin-top: -1px">
+          <li><a href="http://www.google.com/calendar/render?cid=http://DOMAIN{{source.ics}}">Voeg toe aan Google Calendar</a></li>
+          <li><a href="webcal://DOMAIN{{source.ics}}">Voeg toe aan lokale kalender</a></li>
+        </ul>
+      </div>
+
+
 
     </header>
 
