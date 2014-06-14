@@ -1,0 +1,139 @@
+.fc {
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+}
+
+.fc-header-title h2 {
+    font-size: 21px;
+    font-weight: 300;
+    line-height: 27px;
+    color: rgb(51, 51, 51)
+}
+.fc-button {
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+}
+
+.fc-header-title h2 strong {
+    font-weight: 500;
+}
+
+.fc-agenda-slots td div {
+    height: 30px;
+}
+
+.ui-widget-header {
+    border-width: 0 !important;
+    border-bottom: 1px solid rgb(216, 217, 217) !important;
+}
+
+.fc-agenda-days .fc-widget-content {
+    border-width: 0 !important;
+}
+
+.fc-agenda-axis {
+    border-width: 0 !important;
+    font-size: 13px;
+    font-weight: 300 !important;
+    color: rgb(102, 102, 102);
+    vertical-align: text-top !important;
+}
+
+.fc-agenda-slots td {
+    border-top: 1px solid rgb(229, 229, 229);
+}
+
+thead .ui-widget-header {
+    color: rgb(172, 174, 175);
+}
+
+thead .ui-widget-header .fc-date {
+    font-size: 17px;
+    font-weight: 500;
+}
+
+thead .ui-widget-header .fc-day {
+    font-size: 15px;
+    font-weight: 300;
+}
+
+.fc-today {
+    background-color: #ffefef;
+}
+
+.fc-event {
+    border-left-width: 3px !important;
+    border-corner-shape: notch;
+    border-top-width: 0 !important;
+    border-right-width: 0 !important;
+    border-bottom-width: 1px !important;
+    border-bottom-color: white !important;
+    border-radius: 0 !important;
+}
+
+.fc-event-inner {
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+.fc-event-time {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+}
+.fc-event-inner:hover .fc-event-time {
+    opacity: 1;
+}
+
+.fc-event-title {
+    font-weight: 500;
+    line-height: 16px;
+}
+
+.fc-event-location {
+    font-weight: 300;
+    line-height: 14px;
+}
+
+body {
+    margin: 50px;
+}
+#calendar {
+    margin: 0 auto;
+    clear: both;
+}
+
+.source-container {
+    float: left;
+}
+
+.source-container ul {
+    top: auto;
+    left: auto;
+}
+.source-container:hover ul, .source-container.active ul {
+    display: block;
+}
+.source {
+    border-width: 0;
+    border-left-width: 3px;
+    border-style: solid;
+    margin: 5px;
+    padding: 10px;
+}
+
+#select {
+    float: left;
+    width: 50%;
+    margin-right: 30px;
+    margin-bottom: 30px;
+}
+
+#select, .source {
+    margin-top: 5px;
+    height: 3em;
+}
