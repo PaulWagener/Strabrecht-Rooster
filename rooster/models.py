@@ -17,7 +17,7 @@ class Source(models.Model):
         return {
                 'title': self.title,
                 'type': self.type,
-                'json_url': self.get_json_url()}
+                'url': self.get_json_url()}
 
     def get_json_url(self):
         return '/%s/%s.json' % (self.type, self.get_code())

@@ -15,8 +15,16 @@
     <script>
     angular.module('RoosterApp', ['ui.bootstrap'])
     .controller('RoosterController', function($scope, $http) {
-        $scope.activeSources = JSON.parse(localStorage['activeSources'] || []);
+        $scope.activeSources = [];
         $scope.sources = UNTIS_JSON;
+
+        $(JSON.parse(localStorage['activeTitles'] || '[]')).each(function(i, title) {
+            $($scope.sources).each(function(i, source) {
+                if(source.title == title) {
+                    $scope.activeSources.push(source);
+                }
+            })
+        });
 
         $scope.$watchCollection('activeSources', function(newSources, oldSources) {
             if(newSources == oldSources)
@@ -24,16 +32,19 @@
 
             // Remove old sources
             $(oldSources).not(newSources).each(function(i, e) {
-                $('#calendar').fullCalendar('removeEventSource', e.json_url)
+
+                $('#calendar').fullCalendar('removeEventSource', e)
             });
 
             // Add new sources
             $(newSources).not(oldSources).each(function(i, e) {
-                $('#calendar').fullCalendar('addEventSource', e.json_url)
+                //e.color = 'yellow';
+                $('#calendar').fullCalendar('addEventSource', e)
             });
 
             // Save in local storage
-            localStorage['activeSources'] = JSON.stringify(newSources);
+            var activeTitles = $(newSources).map(function(i, s) {return s.title;}).get();
+            localStorage['activeTitles'] = JSON.stringify(activeTitles);
         });
 
         $scope.select = function(source) {
@@ -61,7 +72,8 @@
               right: 'today prev,next'
             },
             eventRender: function(event, element) {
-                console.log(element);
+                $(element).find('.fc-event-inner').append($('<div class="fc-event-location">'+event.location+'</div>'))
+                console.log($(element).filter('.fc-event-inner'));
             }
         }).fullCalendar( 'gotoDate', 'UNTIS_STARTDATE');
 
