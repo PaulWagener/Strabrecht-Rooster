@@ -1,8 +1,8 @@
 """
 Module to abstract away all the idiosyncracies of the Untis timetabling website
 """
-import urllib2, ast, re, json, datetime, lxml.html, pytz
-from models import Source, Event
+import ast, re, json, datetime, lxml.html, pytz
+import models
 
 timetable = [
     (datetime.time( 8, 30, 0), datetime.time( 9, 20, 0)),
@@ -18,21 +18,21 @@ timetable = [
 
 # Download all available calendar sources from Untis
 def get_sources():
-    html = urllib2.urlopen('http://rooster.strabrecht.nl/weken/Dagelijks/frames/navbar.htm').read().decode('iso-8859-1')
+    html = models.Cache.read_url('http://rooster.strabrecht.nl/weken/Dagelijks/frames/navbar.htm')
 
     sources = []
 
     for teacher in ast.literal_eval(re.search('var teachers = (\[.*?\])', html).group(1)):
-        sources.append(Source(title=teacher, type='teacher'))
+        sources.append(models.Source(title=teacher, type='teacher'))
 
     for group in ast.literal_eval(re.search('var classes = (\[.*?\])', html).group(1)):
-        sources.append(Source(title=group, type='group'))
+        sources.append(models.Source(title=group, type='group'))
 
     for student in ast.literal_eval(re.search('var students = (\[.*?\])', html).group(1)):
-        sources.append(Source(title=student, type='student'))
+        sources.append(models.Source(title=student, type='student'))
 
     for room in ast.literal_eval(re.search('var rooms = (\[.*?\])', html).group(1)):
-        sources.append(Source(title=student, type='room'))
+        sources.append(models.Source(title=student, type='room'))
 
     return sources
 
@@ -46,7 +46,7 @@ def get_object_index(source):
     This is needed for the calendar URL's
     """
     index = 0
-    for s in Source.get_sources():
+    for s in models.Source.get_sources():
         if s.type == source.type:
             index += 1
 
@@ -59,7 +59,7 @@ def get_start_date_for_untis_week(untis_week):
     """
     Get the monday date for an 'Untis week' (Dagelijks, dezeweek, volgendrooster)
     """
-    html = urllib2.urlopen('http://rooster.strabrecht.nl/weken/%s/frames/navbar.htm' % untis_week).read().decode('iso-8859-1')
+    html = models.Cache.read_url('http://rooster.strabrecht.nl/weken/%s/frames/navbar.htm' % untis_week)
     date_string = re.search('<option value="[0-9]+">([0-9-]+)', html).group(1)
     return datetime.datetime.strptime(date_string, '%d-%m-%Y').date()
 
@@ -69,10 +69,16 @@ def get_events(source):
     """
     # Get untis index number for the object
     index = get_object_index(source)
-    return get_events_for_untis_week(source, 'Dagelijks')
+    start_date = get_start_date_for_untis_week('Dagelijks')
+
+    events_current = get_events_for_untis_week(source, start_date, 'Dagelijks')
+    events_regular = get_events_for_untis_week(source, start_date + datetime.timedelta(days=7), 'dezeweek', repeated=True)
+
+    return events_current +events_regular
 
 
-def get_events_for_untis_week(source, untis_week):
+
+def get_events_for_untis_week(source, monday_date, untis_week, repeated=False):
     # Generate the URL
     type_letter = {
         'teacher': 't',
@@ -80,13 +86,12 @@ def get_events_for_untis_week(source, untis_week):
         'group': 'c',
         'student': 's',
     }[source.type]
-    start_date = get_start_date_for_untis_week(untis_week)
-    week_number = start_date.isocalendar()[1]
+    week_number = get_start_date_for_untis_week(untis_week).isocalendar()[1]
     index = get_object_index(source)
     url = 'http://rooster.strabrecht.nl/weken/%s/%s/%s/%s%s.htm' % (untis_week, week_number, type_letter, type_letter, str(index).zfill(5))
 
     # Parse the page
-    html = urllib2.urlopen(url).read().decode('iso-8859-1')
+    html = models.Cache.read_url(url)
     tree = lxml.html.fromstring(html)
 
     # An array to deal with the colspan system
@@ -106,7 +111,7 @@ def get_events_for_untis_week(source, untis_week):
             while occupied[day] > 0:
                 day += 1
 
-            date = start_date + datetime.timedelta(days=day)
+            date = monday_date + datetime.timedelta(days=day)
 
             hours = int(day_td.get('rowspan')) / 2
             occupied[day] += hours
@@ -127,7 +132,7 @@ def get_events_for_untis_week(source, untis_week):
                 start_utc = pytz.timezone('CET').localize(start).astimezone(pytz.utc)
                 end_utc = pytz.timezone('CET').localize(end).astimezone(pytz.utc)
 
-                event = Event(start=start_utc, end=end_utc, title=text, location=location, source=source)
+                event = models.Event(start=start_utc, end=end_utc, title=text, location=location, source=source, repeated=repeated)
                 events.append(event)
 
             day += 1

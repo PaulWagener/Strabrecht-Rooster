@@ -1,5 +1,6 @@
 from django.db import models
-import untis
+import django.utils.timezone
+import untis, urllib2, datetime
 
 # Create your models here.
 class Source(models.Model):
@@ -17,10 +18,17 @@ class Source(models.Model):
         return {
                 'title': self.title,
                 'type': self.type,
-                'url': self.get_json_url()}
+                'url': self.get_json_url(),
+                'ics': self.get_ics_url()}
+
+    def get_url_base(self):
+        return '/%s/%s' % (self.type, self.get_code())
 
     def get_json_url(self):
-        return '/%s/%s.json' % (self.type, self.get_code())
+        return self.get_url_base() + '.json'
+
+    def get_ics_url(self):
+        return self.get_url_base() + '.ics'
 
     """
     Return all events that can be retrieved for this source
@@ -48,9 +56,30 @@ class Event(models.Model):
     source = models.ForeignKey(Source)
 
     title = models.CharField(max_length=128)
+    repeated = models.BooleanField()
     location = models.CharField(max_length=128)
     start = models.DateTimeField()
     end = models.DateTimeField()
 
     def as_json(self):
         return {'title': self.title, 'location': self.location, 'start': str(self.start), 'end': str(self.end)}
+
+class Cache(models.Model):
+    url = models.CharField(max_length=512)
+    html = models.TextField()
+    downloaded = models.DateTimeField()
+
+    @classmethod
+    def read_url(cls, url):
+        # Delete stale caches
+        Cache.objects.filter(downloaded__lte=django.utils.timezone.now() - datetime.timedelta(hours=1)).delete()
+
+        #
+        try:
+            return Cache.objects.get(url=url).html
+        except Cache.DoesNotExist:
+            print 'cache miss'
+            html = urllib2.urlopen(url).read().decode('iso-8859-1')
+            cache = Cache(url=url,html=html,downloaded=django.utils.timezone.now())
+            cache.save()
+            return html

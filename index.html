@@ -2,6 +2,7 @@
 <html ng-app="RoosterApp">
   <head>
     <title>Strabrecht Rooster</title>
+    <link rel="shortcut icon" href="/static/strabrecht.png">
     <link rel="stylesheet" href="/static/bower_components/bootstrap-css/css/bootstrap.css" />
     <link rel="stylesheet" href="/static/bower_components/fullcalendar/dist/fullcalendar.css">
 
@@ -25,13 +26,36 @@
             border: 'rgb(101, 219, 57)',
             background: 'rgba(209, 255, 191, 0.699)',
             text: 'rgb(60, 130, 34)'
+        },
+        // Red
+        {
+            border: 'rgb(255, 45, 85)',
+            background: 'rgba(255, 191, 203, 0.699)',
+            text: 'rgb(166, 29, 55)'
+        },
+        // Yellow
+        {
+            border: 'rgb(255, 204, 0)',
+            background: 'rgba(255, 242, 191, 0.699)',
+            text: 'rgb(166, 133, 0)'
+        },
+        // Purple
+        {
+            border: 'rgb(204, 115, 225)',
+            background: 'rgba(243, 191, 255, 0.699)',
+            text: 'rgb(123, 68, 136)'
+        },
+        // Brown
+        {
+            border: 'rgb(162, 132, 94)',
+            background: 'rgba(224, 211, 193, 0.699)',
+            text: 'rgb(77, 60, 38)'
         }
         ];
     angular.module('RoosterApp', ['ui.bootstrap'])
     .controller('RoosterController', function($scope, $http) {
         $scope.activeSources = [];
-        $scope.sources = [{"url": "/teacher/Wagener_A.json", "type": "teacher", "title": "Wagener A."}, {"url": "/teacher/Wagener_A.json", "type": "teacher", "title": "Hans van Es"}]
-        //$scope.sources = UNTIS_JSON;
+        $scope.sources = UNTIS_JSON;
 
         $(JSON.parse(localStorage['activeTitles'] || '[]')).each(function(i, title) {
             $($scope.sources).each(function(i, source) {
@@ -47,7 +71,10 @@
 
             // Set colors
             $(newSources).each(function(i, e){
-                e.color = colors[i];
+                var color = colors[i % colors.length];
+                e.backgroundColor = color.background;
+                e.borderColor = color.border;
+                e.textColor = color.text;
             });
 
             // Remove old sources
@@ -57,11 +84,8 @@
 
             // Add new sources
             $(newSources).not(oldSources).each(function(i, e) {
-                $('#calendar').fullCalendar('addEventSource', {backgroundColor: e.color.background, borderColor: e.color.border, textColor: e.color.text,
-                events:
-                [{"start": "2014-06-16 06:30:00+00:00", "end": "2014-06-16 07:20:00+00:00", "location": "316", "title": "1. t2d ec"}, {"start": "2014-06-19 06:30:00+00:00", "end": "2014-06-19 07:20:00+00:00", "location": "316", "title": "1. t2a ec"}, {"start": "2014-06-16 07:20:00+00:00", "end": "2014-06-16 08:10:00+00:00", "location": "316", "title": "2. t2a ec"}, {"start": "2014-06-19 07:20:00+00:00", "end": "2014-06-19 08:10:00+00:00", "location": "316", "title": "2. t2b ec"}, {"start": "2014-06-20 07:20:00+00:00", "end": "2014-06-20 08:10:00+00:00", "location": "314", "title": "2. t2c ec"}, {"start": "2014-06-16 08:10:00+00:00", "end": "2014-06-16 09:00:00+00:00", "location": "316", "title": "3. t2c ec"}, {"start": "2014-06-19 08:10:00+00:00", "end": "2014-06-19 09:00:00+00:00", "location": "316", "title": "3. t3c ec"}, {"start": "2014-06-20 08:10:00+00:00", "end": "2014-06-20 09:00:00+00:00", "location": "314", "title": "3. t2d ec"}, {"start": "2014-06-16 09:25:00+00:00", "end": "2014-06-16 10:15:00+00:00", "location": "316", "title": "4. t2b wi"}, {"start": "2014-06-18 09:25:00+00:00", "end": "2014-06-18 10:15:00+00:00", "location": "316", "title": "4. t2b wi"},
-                 {"start": "2014-06-19 09:25:00+00:00", "end": "2014-06-19 10:15:00+00:00", "location": "", "title": "4. ps ps"}, {"start": "2014-06-20 09:25:00+00:00", "end": "2014-06-20 10:15:00+00:00", "location": "316", "title": "4. t2b wi"}, {"start": "2014-06-16 10:15:00+00:00", "end": "2014-06-16 11:05:00+00:00", "location": "316", "title": "5. t2b ec"}, {"start": "2014-06-17 10:15:00+00:00", "end": "2014-06-17 11:05:00+00:00", "location": "316", "title": "5. t3d ec"}, {"start": "2014-06-18 10:15:00+00:00", "end": "2014-06-18 11:05:00+00:00", "location": "316", "title": "5. t3d ec"}, {"start": "2014-06-16 11:30:00+00:00", "end": "2014-06-16 12:20:00+00:00", "location": "316", "title": "6. t3c ec"}, {"start": "2014-06-17 11:30:00+00:00", "end": "2014-06-17 12:20:00+00:00", "location": "316", "title": "6. t3c ec"}, {"start": "2014-06-16 12:20:00+00:00", "end": "2014-06-16 13:10:00+00:00", "location": "316", "title": "7. t3d ec"}, {"start": "2014-06-17 12:20:00+00:00", "end": "2014-06-17 13:10:00+00:00", "location": "316", "title": "7. t2b me"}]});
-                //$('#calendar').fullCalendar('addEventSource', e)
+                e.cache = true;
+                $('#calendar').fullCalendar('addEventSource', e)
             });
 
             // Save in local storage
@@ -130,8 +154,7 @@
                 $('.fc-button-prev').html('<');
                 $('.fc-button-next').html('>');
             }
-        }).fullCalendar( 'gotoDate', '2014-06-16');
-        //}).fullCalendar( 'gotoDate', 'UNTIS_STARTDATE');
+        }).fullCalendar( 'gotoDate', 'UNTIS_STARTDATE');
 
         // Custom ctrl+f
         $(window).keydown(function(e){
@@ -290,17 +313,15 @@
       <input ng-model="selected" id="select" placeholder="Zoek op klassen, lokalen, docenten en leerlingen" typeahead="source as source.title for source in sources | filter:$viewValue | limitTo:8" typeahead-on-select="select($model)" class="form-control" autofocus>
 
       <div class="source-container" ng-repeat="source in activeSources">
-        <div class="source" ng-attr-style="border-color: {{source.color.border}}; background-color: {{source.color.background}}; color: {{source.color.text}};">
+        <div class="source" ng-attr-style="border-color: {{source.borderColor}}; background-color: {{source.backgroundColor}}; color: {{source.textColor}};">
           {{source.title}} <button ng-click="remove($index)" class="btn btn-default btn-xs">X</button>
         </div>
         <ul class="dropdown-menu" role="menu" style="margin-top: -1px">
           <li><a href="http://www.google.com/calendar/render?cid=http://DOMAIN{{source.ics}}">Voeg toe aan Google Calendar</a></li>
           <li><a href="webcal://DOMAIN{{source.ics}}">Voeg toe aan lokale kalender</a></li>
+          <li><a href="http://DOMAIN{{source.ics}}">Download .ics bestand</a></li>
         </ul>
       </div>
-
-
-
     </header>
 
 
