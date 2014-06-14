@@ -13,6 +13,7 @@
     <script src="/static/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
     <script src="/static/nl.js"></script>
     <script>
+    var colors = ['blue', 'red', 'green', 'yellow', 'purple', 'orange']
     angular.module('RoosterApp', ['ui.bootstrap'])
     .controller('RoosterController', function($scope, $http) {
         $scope.activeSources = [];
@@ -30,9 +31,13 @@
             if(newSources == oldSources)
                 oldSources = [];
 
+            // Set colors
+            $(newSources).each(function(i, e){
+                e.color = colors[i];
+            });
+
             // Remove old sources
             $(oldSources).not(newSources).each(function(i, e) {
-
                 $('#calendar').fullCalendar('removeEventSource', e)
             });
 
@@ -101,20 +106,24 @@
         float: right;
         background-color: #FF9999;
         border: 1px solid black;
-        padding: 15px;
-        margin: 10px;
+        padding: 5px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin: 5px;
+        margin-top: 0;
         border-radius: 5px;
     }
 
     #select {
         width: 50%;
+        margin-bottom: 20px;
     }
     </style>
   </head>
   <body ng-controller="RoosterController">
     <header>
 
-      <div ng-repeat="source in activeSources" class="source">{{source.title}} <button ng-click="remove($index)">X</button></div>
+      <div ng-repeat="source in activeSources" class="source" ng-attr-style="background-color: {{source.color}};">{{source.title}} <button ng-click="remove($index)">X</button></div>
       <input ng-model="selected" id="select" placeholder="Zoek op klassen, lokalen, docenten en leerlingen" typeahead="source as source.title for source in sources | filter:$viewValue | limitTo:8" typeahead-on-select="select($model)" class="form-control" autofocus>
 
     </header>
