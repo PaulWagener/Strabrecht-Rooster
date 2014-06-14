@@ -32,7 +32,7 @@ def get_sources():
         sources.append(models.Source(title=student, type='student'))
 
     for room in ast.literal_eval(re.search('var rooms = (\[.*?\])', html).group(1)):
-        sources.append(models.Source(title=student, type='room'))
+        sources.append(models.Source(title=room, type='room'))
 
     return sources
 
