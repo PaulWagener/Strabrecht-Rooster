@@ -164,7 +164,12 @@
             }
         });
     });
-
+    // You know, for touch interfaces
+    $(function() {
+        $(document.body).on('touchstart', '.source-container', function(e) {
+            $(e.currentTarget).toggleClass('active');
+        });
+    })
     </script>
     <style>
     .fc {
@@ -279,10 +284,13 @@
     .source-container {
         float: left;
     }
-    .source-container:hover ul {
-        display: block;
+
+    .source-container ul {
         top: auto;
         left: auto;
+    }
+    .source-container:hover ul, .source-container.active ul {
+        display: block;
     }
     .source {
         border-width: 0;
