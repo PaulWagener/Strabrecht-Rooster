@@ -119,6 +119,8 @@ def get_events_for_untis_week(source, untis_week):
                     location = text.split()[-1]
                     text = ' '.join(text.split()[:-1])
 
+                text = str(hour + 1) + '. ' + text
+
                 start = datetime.datetime.combine(date, timetable[hour][0])
                 end = datetime.datetime.combine(date, timetable[hour+hours-1][1])
 

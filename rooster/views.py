@@ -7,8 +7,9 @@ from models import Source
 # Create your views here.
 def index(request):
     return HttpResponse(open(strabrecht.settings.PROJECT_PATH + '/index.html').read()
-        .replace('UNTIS_JSON', untis.get_sources_json())
-        .replace('UNTIS_STARTDATE', str(untis.get_start_date_for_untis_week('Dagelijks'))))
+        #.replace('UNTIS_JSON', untis.get_sources_json())
+        #.replace('UNTIS_STARTDATE', str(untis.get_start_date_for_untis_week('Dagelijks'))))
+        )
 
 @csrf_exempt
 def events(request, type, code, file_type):
