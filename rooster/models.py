@@ -65,7 +65,7 @@ class Event(models.Model):
         return {'title': self.title, 'location': self.location, 'start': str(self.start), 'end': str(self.end)}
 
 class Cache(models.Model):
-    url = models.CharField(max_length=512)
+    url = models.CharField(max_length=512, primary_key=True)
     html = models.TextField()
     downloaded = models.DateTimeField()
 

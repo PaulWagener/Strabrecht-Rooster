@@ -37,6 +37,13 @@ var colors = [
     }
     ];
 angular.module('RoosterApp', ['ui.bootstrap'])
+.config( [
+    '$compileProvider',
+    function( $compileProvider )
+    {
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|webcal):/);
+    }
+])
 .controller('RoosterController', function($scope, $http) {
     $scope.activeSources = [];
     $scope.sources = window.sources;
