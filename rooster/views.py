@@ -41,9 +41,8 @@ def events(request, type, code, file_type):
         content += 'END:VCALENDAR'
 
         response = HttpResponse(content)
-        #response['Content-Type'] = 'text/calendar; charset-utf-8'
-        response['Content-Type'] = 'text/plain; charset-utf-8'
-        #response['Content-Disposition'] = 'inline; filename=%s.ics' % code
-        #response['Cache-Control'] = 'max-age=7200, private, must-revalidate'
+        response['Content-Type'] = 'text/calendar; charset-utf-8'
+        response['Content-Disposition'] = 'inline; filename=%s.ics' % code
+        response['Cache-Control'] = 'max-age=7200, private, must-revalidate'
         return response
 
