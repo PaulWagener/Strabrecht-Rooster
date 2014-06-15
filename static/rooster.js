@@ -144,6 +144,9 @@ angular.module('RoosterApp', ['ui.bootstrap'])
             // Prev / next
             $('.fc-button-prev').html('<');
             $('.fc-button-next').html('>');
+        },
+        loading: function(isLoading, view) {
+            $('#calendar').toggleClass('loading', isLoading);
         }
     }).fullCalendar( 'gotoDate', window.startdate);
 

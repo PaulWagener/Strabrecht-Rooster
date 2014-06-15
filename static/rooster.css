@@ -137,3 +137,38 @@ body {
     margin-top: 5px;
     height: 3em;
 }
+
+@-webkit-keyframes rotate {
+  from { -webkit-transform:rotate(0deg);}
+  to { -webkit-transform:rotate(360deg);}
+}
+
+@keyframes rotate {
+  from {transform:rotate(0deg);}
+  to {transform:rotate(360deg);}
+}
+#calendar .fc-content {
+    opacity: 1;
+    transition: opacity 0.15s ease-in;
+}
+
+#throbber {
+    transition: opacity 0.15s ease-in;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    margin-left: -50px;
+    z-index: 999;
+    -webkit-animation: rotate 2s infinite linear;
+            animation: rotate 2s infinite linear;
+}
+
+#calendar.loading .fc-content {
+    opacity: 0.7;
+}
+
+#calendar.loading #throbber {
+    opacity: 0.5;
+}
