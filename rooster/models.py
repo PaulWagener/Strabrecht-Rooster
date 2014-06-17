@@ -34,13 +34,11 @@ class Source(models.Model):
     Return all events that can be retrieved for this source
     """
     def get_events(self):
-        # TODO: Some sort of caching?
         return untis.get_events(self)
 
 
     @classmethod
     def get_sources(cls):
-        # TODO: Some sort of caching?
         return untis.get_sources()
 
     @classmethod

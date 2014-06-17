@@ -17,8 +17,8 @@ timetable = [
 ]
 
 # Download all available calendar sources from Untis
-def get_sources():
-    html = models.Cache.read_url('http://rooster.strabrecht.nl/weken/Dagelijks/frames/navbar.htm')
+def get_sources(untis_week='Dagelijks'):
+    html = models.Cache.read_url('http://rooster.strabrecht.nl/weken/%s/frames/navbar.htm' % untis_week)
 
     sources = []
 
@@ -40,13 +40,13 @@ def get_sources_json():
     return json.dumps([s.as_json() for s in get_sources()])
 
 
-def get_object_index(source):
+def get_object_index(source, untis_week):
     """
     Get the index for a source
     This is needed for the calendar URL's
     """
     index = 0
-    for s in models.Source.get_sources():
+    for s in get_sources(untis_week):
         if s.type == source.type:
             index += 1
 
@@ -68,7 +68,6 @@ def get_events(source):
     Get a list of events for a particular source
     """
     # Get untis index number for the object
-    index = get_object_index(source)
     start_date = get_start_date_for_untis_week('Dagelijks')
 
     events_current = get_events_for_untis_week(source, start_date, 'Dagelijks')
@@ -87,7 +86,7 @@ def get_events_for_untis_week(source, monday_date, untis_week, repeated=False):
         'student': 's',
     }[source.type]
     week_number = get_start_date_for_untis_week(untis_week).isocalendar()[1]
-    index = get_object_index(source)
+    index = get_object_index(source, untis_week)
     url = 'http://rooster.strabrecht.nl/weken/%s/%s/%s/%s%s.htm' % (untis_week, week_number, type_letter, type_letter, str(index).zfill(5))
 
     # Parse the page
