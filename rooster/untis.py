@@ -87,7 +87,7 @@ def get_events_for_untis_week(source, monday_date, untis_week, repeated=False):
     }[source.type]
     week_number = get_start_date_for_untis_week(untis_week).isocalendar()[1]
     index = get_object_index(source, untis_week)
-    url = 'http://rooster.strabrecht.nl/weken/%s/%s/%s/%s%s.htm' % (untis_week, week_number, type_letter, type_letter, str(index).zfill(5))
+    url = 'http://rooster.strabrecht.nl/weken/%s/%02d/%s/%s%s.htm' % (untis_week, week_number, type_letter, type_letter, str(index).zfill(5))
 
     # Parse the page
     html = models.Cache.read_url(url)
