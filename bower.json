@@ -2,7 +2,7 @@
   "name": "strabrecht",
   "version": "1.0.0",
   "dependencies": {
-    "fullcalendar": "~2.x",
+    "fullcalendar": "2.0.0",
     "angular": "~1.2.x",
     "angular-bootstrap": "~0.x",
     "bootstrap-css": "~3.x"
