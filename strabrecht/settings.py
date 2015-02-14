@@ -84,7 +84,7 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__)) + '/..'
 
 # Additional locations of static files
 TEMPLATE_DIRS = (
-    PROJECT_PATH + '/templates'
+    PROJECT_PATH + '/templates',
 )
 
 STATICFILES_DIRS = (
