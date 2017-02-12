@@ -2,7 +2,7 @@
 Module to abstract away all the idiosyncracies of the Untis timetabling website
 """
 import ast, re, json, datetime, lxml.html, pytz
-from . import models
+import rooster.models
 
 timetable = [
     (datetime.time( 8, 30, 0), datetime.time( 9, 20, 0)),
@@ -18,21 +18,21 @@ timetable = [
 
 # Download all available calendar sources from Untis
 def get_sources(untis_week='Dagelijks'):
-    html = models.Cache.read_url('http://rooster.strabrecht.nl/weken/%s/frames/navbar.htm' % untis_week)
+    html = rooster.models.Cache.read_url('http://rooster.strabrecht.nl/weken/%s/frames/navbar.htm' % untis_week)
 
     sources = []
 
     for teacher in ast.literal_eval(re.search('var teachers = (\[.*?\])', html).group(1)):
-        sources.append(models.Source(title=teacher, type='teacher'))
+        sources.append(rooster.models.Source(title=teacher, type='teacher'))
 
     for group in ast.literal_eval(re.search('var classes = (\[.*?\])', html).group(1)):
-        sources.append(models.Source(title=group, type='group'))
+        sources.append(rooster.models.Source(title=group, type='group'))
 
     for student in ast.literal_eval(re.search('var students = (\[.*?\])', html).group(1)):
-        sources.append(models.Source(title=student, type='student'))
+        sources.append(rooster.models.Source(title=student, type='student'))
 
     for room in ast.literal_eval(re.search('var rooms = (\[.*?\])', html).group(1)):
-        sources.append(models.Source(title=room, type='room'))
+        sources.append(rooster.models.Source(title=room, type='room'))
 
     return sources
 
@@ -59,7 +59,7 @@ def get_start_date_for_untis_week(untis_week):
     """
     Get the monday date for an 'Untis week' (Dagelijks, dezeweek, volgendrooster)
     """
-    html = models.Cache.read_url('http://rooster.strabrecht.nl/weken/%s/frames/navbar.htm' % untis_week)
+    html = rooster.models.Cache.read_url('http://rooster.strabrecht.nl/weken/%s/frames/navbar.htm' % untis_week)
     date_string = re.search('<option value="[0-9]+">([0-9-]+)', html).group(1)
     return datetime.datetime.strptime(date_string, '%d-%m-%Y').date()
 
@@ -90,7 +90,7 @@ def get_events_for_untis_week(source, monday_date, untis_week, repeated=False):
     url = 'http://rooster.strabrecht.nl/weken/%s/%02d/%s/%s%s.htm' % (untis_week, week_number, type_letter, type_letter, str(index).zfill(5))
 
     # Parse the page
-    html = models.Cache.read_url(url)
+    html = rooster.models.Cache.read_url(url)
     tree = lxml.html.fromstring(html)
 
     # An array to deal with the colspan system
@@ -131,7 +131,7 @@ def get_events_for_untis_week(source, monday_date, untis_week, repeated=False):
                 start_utc = pytz.timezone('CET').localize(start).astimezone(pytz.utc)
                 end_utc = pytz.timezone('CET').localize(end).astimezone(pytz.utc)
 
-                event = models.Event(start=start_utc, end=end_utc, title=text, location=location, source=source, repeated=repeated)
+                event = rooster.models.Event(start=start_utc, end=end_utc, title=text, location=location, source=source, repeated=repeated)
                 events.append(event)
 
             day += 1
