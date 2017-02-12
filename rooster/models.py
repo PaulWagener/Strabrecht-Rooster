@@ -1,6 +1,7 @@
 from django.db import models
 import django.utils.timezone
-import untis, urllib2, datetime, re
+import urllib.request, urllib.error, urllib.parse, datetime, re
+import rooster.untis
 
 # Create your models here.
 class Source(models.Model):
@@ -34,12 +35,12 @@ class Source(models.Model):
     Return all events that can be retrieved for this source
     """
     def get_events(self):
-        return untis.get_events(self)
+        return rooster.untis.get_events(self)
 
 
     @classmethod
     def get_sources(cls):
-        return untis.get_sources()
+        return rooster.untis.get_sources()
 
     @classmethod
     def get_source(cls, type, code):
@@ -76,8 +77,8 @@ class Cache(models.Model):
         try:
             return Cache.objects.get(url=url).html
         except Cache.DoesNotExist:
-            print 'cache miss'
-            html = urllib2.urlopen(url).read().decode('iso-8859-1')
+            print('cache miss')
+            html = urllib.request.urlopen(url).read().decode('iso-8859-1')
             cache = Cache(url=url,html=html,downloaded=django.utils.timezone.now())
             cache.save()
             return html

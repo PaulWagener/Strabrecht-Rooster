@@ -2,14 +2,14 @@
 Module to abstract away all the idiosyncracies of the Untis timetabling website
 """
 import ast, re, json, datetime, lxml.html, pytz
-import models
+from . import models
 
 timetable = [
     (datetime.time( 8, 30, 0), datetime.time( 9, 20, 0)),
     (datetime.time( 9, 20, 0), datetime.time(10, 10, 0)),
     (datetime.time(10, 10, 0), datetime.time(11, 00, 0)),
     (datetime.time(11, 25, 0), datetime.time(12, 15, 0)),
-    (datetime.time(12, 15, 0), datetime.time(13, 05, 0)),
+    (datetime.time(12, 15, 0), datetime.time(13, 0o5, 0)),
     (datetime.time(13, 30, 0), datetime.time(14, 20, 0)),
     (datetime.time(14, 20, 0), datetime.time(15, 10, 0)),
     (datetime.time(15, 10, 0), datetime.time(16, 00, 0)),
@@ -101,7 +101,7 @@ def get_events_for_untis_week(source, monday_date, untis_week, repeated=False):
     for hour_tr in tree.find('.//table')[1::2]:
         day = 0
         # We are at the next hour, subtract all occupied
-        occupied = map(lambda x: max(0, x - 1), occupied)
+        occupied = [max(0, x - 1) for x in occupied]
 
         # Go through the days (<td> tags in this <tr>), skip the first column which contains the hour information
         for day_td in hour_tr[1:]:
