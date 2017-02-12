@@ -126,7 +126,7 @@ def get_events_for_untis_week(source, monday_date, untis_week, repeated=False):
                 text = str(hour + 1) + '. ' + text
 
                 start = datetime.datetime.combine(date, timetable[hour][0])
-                end = datetime.datetime.combine(date, timetable[hour+hours-1][1])
+                end = datetime.datetime.combine(date, timetable[int(hour+hours-1)][1])
 
                 start_utc = pytz.timezone('CET').localize(start).astimezone(pytz.utc)
                 end_utc = pytz.timezone('CET').localize(end).astimezone(pytz.utc)
