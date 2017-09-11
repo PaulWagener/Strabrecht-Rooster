@@ -5,15 +5,24 @@ import ast, re, json, datetime, lxml.html, pytz
 import rooster.models
 
 timetable = [
-    (datetime.time( 8, 30, 0), datetime.time( 9, 20, 0)),
-    (datetime.time( 9, 20, 0), datetime.time(10, 10, 0)),
-    (datetime.time(10, 10, 0), datetime.time(11, 00, 0)),
-    (datetime.time(11, 25, 0), datetime.time(12, 15, 0)),
-    (datetime.time(12, 15, 0), datetime.time(13, 0o5, 0)),
-    (datetime.time(13, 30, 0), datetime.time(14, 20, 0)),
-    (datetime.time(14, 20, 0), datetime.time(15, 10, 0)),
-    (datetime.time(15, 10, 0), datetime.time(16, 00, 0)),
-    (datetime.time(16, 00, 0), datetime.time(16, 50, 0)),
+    (datetime.time( 8, 30, 0), datetime.time( 8, 55, 0)), # 1
+    (datetime.time( 8, 55, 0), datetime.time( 9, 20, 0)), # 2
+    (datetime.time( 9, 20, 0), datetime.time( 9, 45, 0)), # 3
+    (datetime.time( 9, 45, 0), datetime.time(10, 10, 0)), # 4
+    (datetime.time(10, 10, 0), datetime.time(10, 35, 0)), # 5
+    (datetime.time(10, 35, 0), datetime.time(11, 00, 0)), # 6
+    (datetime.time(11, 00, 0), datetime.time(11, 25, 0)), # 7
+    (datetime.time(11, 25, 0), datetime.time(11, 50, 0)), # 8
+    (datetime.time(11, 50, 0), datetime.time(12, 15, 0)), # 9
+    (datetime.time(12, 15, 0), datetime.time(12, 40, 0)), # 10
+    (datetime.time(12, 40, 0), datetime.time(13,  5, 0)), # 11
+    (datetime.time(13,  5, 0), datetime.time(13, 30, 0)), # 12
+    (datetime.time(13, 30, 0), datetime.time(13, 55, 0)), # 13
+    (datetime.time(13, 55, 0), datetime.time(14, 20, 0)), # 14
+    (datetime.time(14, 20, 0), datetime.time(14, 45, 0)), # 15
+    (datetime.time(14, 45, 0), datetime.time(15, 10, 0)), # 16
+    (datetime.time(15, 10, 0), datetime.time(15, 35, 0)), # 17
+    (datetime.time(15, 35, 0), datetime.time(16, 00, 0)), # 18
 ]
 
 # Download all available calendar sources from Untis
